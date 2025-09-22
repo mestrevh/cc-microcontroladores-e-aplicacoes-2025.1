@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Wed Sep 17 16:15:49 2025
+AVRASM ver. 2.2.8  C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Mon Sep 22 10:56:33 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -702,18 +702,18 @@ DEF  state        r19
 EQU  display1     00000010
 EQU  display2     00000020
 CSEG reset        00000018
-CSEG OCI1A_Interrupt 0000006f
+CSEG OCI1A_Interrupt 00000072
 EQU  PRESCALE     00000005
 EQU  PRESCALE_DIV 00000400
 EQU  WGM          00000004
-EQU  TOP          0000030d
-CSEG main         0000002e
-CSEG state_one    00000049
-CSEG state_two    0000004e
-CSEG state_three  00000053
-CSEG state_four   00000058
-CSEG state_five   0000005d
-CSEG state_six    00000062
-CSEG state_seven  00000067
-CSEG zero         0000006c
-CSEG skip         0000007a
+EQU  TOP          0000009c
+CSEG main         0000002f
+CSEG state_one    00000046
+CSEG state_two    0000004b
+CSEG state_three  00000052
+CSEG state_four   00000057
+CSEG state_five   0000005c
+CSEG state_six    00000063
+CSEG state_seven  0000006a
+CSEG zero         0000006f
+CSEG skip         0000007b

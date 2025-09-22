@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Wed Sep 17 16:15:49 2025
+AVRASM ver. 2.2.8  C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Mon Sep 22 10:56:33 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -1003,22 +1003,22 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
                                  .org 0x0000
 000000 940c 0018                 jmp reset
                                  .org OC1Aaddr
-000016 940c 006f                 jmp OCI1A_Interrupt
+000016 940c 0072                 jmp OCI1A_Interrupt
                                  
                                  reset:
                                  	#define CLOCK 16.0e6
                                  	.equ PRESCALE = 0b101 ; verifique no datasheet ou slide
                                  	.equ PRESCALE_DIV = 1024; verifique no datasheet ou slide
-                                 	#define DELAY 0.05 ; 1 micro-segundos
+                                 	#define DELAY 0.01 ; 1 micro-segundos
                                  	.equ WGM = 0b0100 ; configuração do ctc
                                  	.equ TOP = int(0.5 + ((CLOCK/PRESCALE_DIV)*DELAY)) ; de 0 até 65535
                                  	.if TOP > 65535
                                  	.endif
                                  
                                  	;configuração do TOP
-000018 e003                      	ldi temp, high(TOP)
+000018 e000                      	ldi temp, high(TOP)
 000019 9300 0089                 	sts OCR1AH, temp
-00001b e00d                      	ldi temp, low(TOP)
+00001b e90c                      	ldi temp, low(TOP)
 00001c 9300 0088                 	sts OCR1AL, temp
                                  
                                  	;configuração do CS
@@ -1044,141 +1044,152 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 00002b e30f                      	ldi temp, (1 << PCINT5) | (1 << PCINT4) | (1 << PCINT3) | (1 << PCINT2) | (1 << PCINT1) | (1 << PCINT0)
 00002c b904                      	out DDRB, temp
                                  
-00002d 9478                      	sei
+00002d e03a                      	ldi state, 0b00001010
+                                 
+00002e 9478                      	sei
                                  	
                                  main:
-                                 	;enviando os bits do led para unidades
-00002e 2f01                      	mov temp, count_u
-00002f 6200                      	ori temp, display2; 0b00010000 - display 2
-000030 b908                      	out PORTC, temp
                                  	
                                  	;enviando os bits do led para dezenas
-000031 2f02                      	mov temp, count_d
-000032 6100                      	ori temp, display1; 0b00100000 - display 1
-000033 b908                      	out PORTC, temp
+00002f 2f02                      	mov temp, count_d
+000030 6100                      	ori temp, display1; 0b00100000 - display 1
+000031 b908                      	out PORTC, temp
                                  
-000034 2f32                      	mov state, count_d
-                                 
-                                 	; trocar os 4 primeiros bits
-000035 9532                      	swap state            
-000036 7f30                      	andi state, 0xF0
-                                 
-                                 	; completanto o bits do reg. led
-000037 2b31                      	or state, count_u
+                                 	;enviando os bits do led para unidades
+000032 2f01                      	mov temp, count_u
+000033 6200                      	ori temp, display2; 0b00010000 - display 2
+000034 b908                      	out PORTC, temp
                                  	
-000038 3030                      	cpi state, 0b00000000 ; 0
-000039 f079                      	breq state_one
+                                 	;state = registrador responsável pela troca dos estados
+                                 	;mov state, count_d
+                                 	
+000035 3030                      	cpi state, 0b00000000 ; 0
+000036 f079                      	breq state_one
                                  
-00003a 3035                      	cpi state, 0b00000101 ; 5
-00003b f091                      	breq state_two
+000037 303a                      	cpi state, 0b00001010 ; 10
+000038 f091                      	breq state_two
                                  
-00003c 3130                      	cpi state, 0b00010000 ; 10
-00003d f0a9                      	breq state_three
+000039 3230                      	cpi state, 0b00100000 ; 32
+00003a f0b9                      	breq state_three
                                  
-00003e 3135                      	cpi state, 0b00010101 ; 15
-00003f f0c1                      	breq state_four
+00003b 3234                      	cpi state, 0b00100100 ; 36
+00003c f0d1                      	breq state_four
                                  
-000040 3230                      	cpi state, 0b00100000 ; 20
-000041 f0d9                      	breq state_five
+00003d 3631                      	cpi state, 0b01100001 ; 97
+00003e f0e9                      	breq state_five
                                  
-000042 3235                      	cpi state, 0b00100101 ; 25
-000043 f0f1                      	breq state_six
+00003f 3635                      	cpi state, 0b01100101 ; 101
+000040 f111                      	breq state_six
                                  
-000044 3330                      	cpi state, 0b00110000 ; 30
-000045 f109                      	breq state_seven
+000041 373f                      	cpi state, 0b01111111 ; 127
+000042 f139                      	breq state_seven
                                  
-000046 3335                      	cpi state, 0b00110101 ; 35
-000047 f121                      	breq zero
+000043 3833                      	cpi state, 0b10000011 ; 131
+000044 f151                      	breq zero
                                  
-000048 cfe5                      	rjmp main
-                                 
+000045 cfe9                      	rjmp main
+                                 		
                                  	state_one:
-000049 e900                      		ldi temp, 0b10010000
-00004a b90b                      		out PORTD, temp
+000046 e900                      		ldi temp, 0b10010000
+000047 b90b                      		out PORTD, temp
                                  
-00004b e204                      		ldi temp, 0b00100100
-00004c b905                      		out PORTB, temp
-00004d cfe0                      		rjmp main
+000048 e204                      		ldi temp, 0b00100100
+000049 b905                      		out PORTB, temp
+00004a cfe4                      		rjmp main
                                  
                                  	state_two:
-00004e e300                      		ldi temp, 0b00110000
-00004f b90b                      		out PORTD, temp
+00004b e300                      		ldi temp, 0b00110000
+00004c b90b                      		out PORTD, temp
                                  
-000050 e201                      		ldi temp, 0b00100001
-000051 b905                      		out PORTB, temp
-000052 cfdb                      		rjmp main
+00004d e201                      		ldi temp, 0b00100001
+00004e b905                      		out PORTB, temp
+                                 
+00004f e017                      		ldi count_u, 0b00000111 ; timer unidade = 7
+000050 e028                      		ldi count_d, 0b00001000 ;  timer dezena = 8
+000051 cfdd                      		rjmp main
                                  
                                  	state_three:
-000053 e300                      		ldi temp, 0b00110000
-000054 b90b                      		out PORTD, temp
+000052 e300                      		ldi temp, 0b00110000
+000053 b90b                      		out PORTD, temp
                                  
-000055 e202                      		ldi temp, 0b00100010
-000056 b905                      		out PORTB, temp
-000057 cfd6                      		rjmp main
+000054 e202                      		ldi temp, 0b00100010
+000055 b905                      		out PORTB, temp
+000056 cfd8                      		rjmp main
                                  
                                  	state_four:
-000058 e300                      		ldi temp, 0b00110000
-000059 b90b                      		out PORTD, temp
+000057 e300                      		ldi temp, 0b00110000
+000058 b90b                      		out PORTD, temp
                                  
-00005a e00c                      		ldi temp, 0b00001100
-00005b b905                      		out PORTB, temp
-00005c cfd1                      		rjmp main
+000059 e00c                      		ldi temp, 0b00001100
+00005a b905                      		out PORTB, temp
+00005b cfd3                      		rjmp main
                                  
                                  	state_five:
-00005d e500                      		ldi temp, 0b01010000
-00005e b90b                      		out PORTD, temp
+00005c e500                      		ldi temp, 0b01010000
+00005d b90b                      		out PORTD, temp
                                  
-00005f e104                      		ldi temp, 0b00010100
-000060 b905                      		out PORTB, temp
-000061 cfcc                      		rjmp main
+00005e e104                      		ldi temp, 0b00010100
+00005f b905                      		out PORTB, temp
+                                 		
+000060 e014                      		ldi count_u, 0b00000100 ; =4
+000061 e020                      		ldi count_d, 0b00000000
+                                 		
+000062 cfcc                      		rjmp main
                                  
                                  	state_six:
-000062 e804                      		ldi temp, 0b10000100
-000063 b90b                      		out PORTD, temp
+000063 e804                      		ldi temp, 0b10000100
+000064 b90b                      		out PORTD, temp
                                  
-000064 e204                      		ldi temp, 0b00100100
-000065 b905                      		out PORTB, temp
-000066 cfc7                      		rjmp main
+000065 e204                      		ldi temp, 0b00100100
+000066 b905                      		out PORTB, temp
+                                 
+000067 e010                      		ldi count_u, 0b00000000
+000068 e024                      		ldi count_d, 0b00000100 ; = 4
+                                 
+000069 cfc5                      		rjmp main
                                  
                                  	state_seven:
-000067 e808                      		ldi temp, 0b10001000
-000068 b90b                      		out PORTD, temp
+00006a e808                      		ldi temp, 0b10001000
+00006b b90b                      		out PORTD, temp
                                  
-000069 e204                      		ldi temp, 0b00100100
-00006a b905                      		out PORTB, temp
-00006b cfc2                      		rjmp main
+00006c e204                      		ldi temp, 0b00100100
+00006d b905                      		out PORTB, temp
+00006e cfc0                      		rjmp main
                                  
                                  	zero:
-00006c e010                      		ldi count_u, 0x00
-00006d e020                      		ldi count_d, 0x00
+00006f e010                      		ldi count_u, 0x00
+000070 e020                      		ldi count_d, 0x00
                                  
-00006e cfbf                      	rjmp main
+000071 cfbd                      	rjmp main
                                  
                                  
                                  OCI1A_Interrupt:
-00006f 930f                      	push temp
-000070 b70f                      	in temp, SREG
-000071 930f                      	push temp
+000072 930f                      	push temp
+000073 b70f                      	in temp, SREG
+000074 930f                      	push temp
+                                 
+                                 	;conta cada segundo para o estado
+000075 9533                      	inc state
                                  
                                  	;contar unidade
-000072 9513                      	inc count_u
+000076 951a                      	dec count_u
                                  
                                  	;comparar quando a unidade chegar em '10'
-000073 301a                      	cpi count_u, 10
-000074 f429                      	brne skip
+000077 3f1f                      	cpi count_u, 0xff
+000078 f411                      	brne skip
                                  
                                  	; zerar unidades
-000075 e010                      	ldi count_u, 0x00
+000079 e019                      	ldi count_u, 0x09
                                  
                                  	;contar dezenas
-000076 9523                      	inc count_d
+00007a 952a                      	dec count_d
                                  
                                  	;comparar quando a unidade chegar em '10'
-000077 302a                      	cpi count_d, 10
-000078 f409                      	brne skip
+                                 	;cpi count_d, 10
+                                 	;brne skip
                                  
                                  	;zerar dezenas
-000079 e020                      	ldi count_d, 0x00
+                                 	;ldi count_d, 0x00
                                  
                                  	skip:
                                  		
@@ -1197,9 +1208,9 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
                                  
                                  		;out PORTD, led
                                  
-00007a 910f                      	pop temp
-00007b bf0f                      	out SREG, temp
-00007c 910f                      	pop temp
+00007b 910f                      	pop temp
+00007c bf0f                      	out SREG, temp
+00007d 910f                      	pop temp
 
 
 RESOURCE USE INFORMATION
@@ -1219,37 +1230,37 @@ counted separately from r26..r31 here.
 "ATmega328P" register use summary:
 x  :   0 y  :   0 z  :   0 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
-r13:   0 r14:   0 r15:   0 r16:  56 r17:   6 r18:   6 r19:  12 r20:   0 
+r13:   0 r14:   0 r15:   0 r16:  56 r17:   8 r18:   6 r19:  10 r20:   0 
 r21:   0 r22:   0 r23:   0 r24:   0 r25:   0 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   0 r31:   0 
 Registers used: 4 out of 35 (11.4%)
 
 "ATmega328P" instruction use summary:
 .lds  :   0 .sts  :   0 adc   :   0 add   :   0 adiw  :   0 and   :   0 
-andi  :   1 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
+andi  :   0 asr   :   0 bclr  :   0 bld   :   0 brbc  :   0 brbs  :   0 
 brcc  :   0 brcs  :   0 break :   0 breq  :   8 brge  :   0 brhc  :   0 
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
-brne  :   2 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
+brne  :   1 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
 clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
-cpi   :  10 cpse  :   0 dec   :   0 eor   :   0 fmul  :   0 fmuls :   0 
-fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   2 jmp   :   2 
-ld    :   0 ldd   :   0 ldi   :  26 lds   :   0 lpm   :   0 lsl   :   0 
-lsr   :   0 mov   :   3 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
-neg   :   0 nop   :   0 or    :   1 ori   :   2 out   :  20 pop   :   2 
+cpi   :   9 cpse  :   0 dec   :   2 eor   :   0 fmul  :   0 fmuls :   0 
+fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   1 jmp   :   2 
+ld    :   0 ldd   :   0 ldi   :  32 lds   :   0 lpm   :   0 lsl   :   0 
+lsr   :   0 mov   :   2 movw  :   0 mul   :   0 muls  :   0 mulsu :   0 
+neg   :   0 nop   :   0 or    :   0 ori   :   2 out   :  20 pop   :   2 
 push  :   2 rcall :   0 ret   :   0 reti  :   1 rjmp  :   9 rol   :   0 
 ror   :   0 sbc   :   0 sbci  :   0 sbi   :   0 sbic  :   0 sbis  :   0 
 sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   0 sec   :   0 seh   :   0 
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :   5 
-sub   :   0 subi  :   0 swap  :   1 tst   :   0 wdr   :   0 
-Instructions used: 19 out of 113 (16.8%)
+sub   :   0 subi  :   0 swap  :   0 tst   :   0 wdr   :   0 
+Instructions used: 17 out of 113 (15.0%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0000fc    212      0    212   32768   0.6%
+[.cseg] 0x000000 0x0000fe    214      0    214   32768   0.7%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 

@@ -23,7 +23,7 @@ reset:
 	#define CLOCK 16.0e6
 	.equ PRESCALE = 0b101 ; verifique no datasheet ou slide
 	.equ PRESCALE_DIV = 1024; verifique no datasheet ou slide
-	#define DELAY 0.05 ; 1 micro-segundos
+	#define DELAY 0.01 ; 1 micro-segundos
 	.equ WGM = 0b0100 ; configuração do ctc
 	.equ TOP = int(0.5 + ((CLOCK/PRESCALE_DIV)*DELAY)) ; de 0 até 65535
 	.if TOP > 65535
@@ -59,54 +59,51 @@ reset:
 	ldi temp, (1 << PCINT5) | (1 << PCINT4) | (1 << PCINT3) | (1 << PCINT2) | (1 << PCINT1) | (1 << PCINT0)
 	out DDRB, temp
 
+	ldi state, 0b00001010
+
 	sei
 	
 main:
-	;enviando os bits do led para unidades
-	mov temp, count_u
-	ori temp, display2; 0b00010000 - display 2
-	out PORTC, temp
 	
 	;enviando os bits do led para dezenas
 	mov temp, count_d
 	ori temp, display1; 0b00100000 - display 1
 	out PORTC, temp
 
-	mov state, count_d
-
-	; trocar os 4 primeiros bits
-	swap state            
-	andi state, 0xF0
-
-	; completanto o bits do reg. led
-	or state, count_u
+	;enviando os bits do led para unidades
+	mov temp, count_u
+	ori temp, display2; 0b00010000 - display 2
+	out PORTC, temp
+	
+	;state = registrador responsável pela troca dos estados
+	;mov state, count_d
 	
 	cpi state, 0b00000000 ; 0
 	breq state_one
 
-	cpi state, 0b00000101 ; 5
+	cpi state, 0b00001010 ; 10
 	breq state_two
 
-	cpi state, 0b00010000 ; 10
+	cpi state, 0b00100000 ; 32
 	breq state_three
 
-	cpi state, 0b00010101 ; 15
+	cpi state, 0b00100100 ; 36
 	breq state_four
 
-	cpi state, 0b00100000 ; 20
+	cpi state, 0b01100001 ; 97
 	breq state_five
 
-	cpi state, 0b00100101 ; 25
+	cpi state, 0b01100101 ; 101
 	breq state_six
 
-	cpi state, 0b00110000 ; 30
+	cpi state, 0b01111111 ; 127
 	breq state_seven
 
-	cpi state, 0b00110101 ; 35
+	cpi state, 0b10000011 ; 131
 	breq zero
 
 	rjmp main
-
+		
 	state_one:
 		ldi temp, 0b10010000
 		out PORTD, temp
@@ -121,6 +118,9 @@ main:
 
 		ldi temp, 0b00100001
 		out PORTB, temp
+
+		ldi count_u, 0b00000111 ; timer unidade = 7
+		ldi count_d, 0b00001000 ;  timer dezena = 8
 		rjmp main
 
 	state_three:
@@ -145,6 +145,10 @@ main:
 
 		ldi temp, 0b00010100
 		out PORTB, temp
+		
+		ldi count_u, 0b00000100 ; =4
+		ldi count_d, 0b00000000
+		
 		rjmp main
 
 	state_six:
@@ -153,6 +157,10 @@ main:
 
 		ldi temp, 0b00100100
 		out PORTB, temp
+
+		ldi count_u, 0b00000000
+		ldi count_d, 0b00000100 ; = 4
+
 		rjmp main
 
 	state_seven:
@@ -175,25 +183,28 @@ OCI1A_Interrupt:
 	in temp, SREG
 	push temp
 
+	;conta cada segundo para o estado
+	inc state
+
 	;contar unidade
-	inc count_u
+	dec count_u
 
 	;comparar quando a unidade chegar em '10'
-	cpi count_u, 10
+	cpi count_u, 0xff
 	brne skip
 
 	; zerar unidades
-	ldi count_u, 0x00
+	ldi count_u, 0x09
 
 	;contar dezenas
-	inc count_d
+	dec count_d
 
 	;comparar quando a unidade chegar em '10'
-	cpi count_d, 10
-	brne skip
+	;cpi count_d, 10
+	;brne skip
 
 	;zerar dezenas
-	ldi count_d, 0x00
+	;ldi count_d, 0x00
 
 	skip:
 		
