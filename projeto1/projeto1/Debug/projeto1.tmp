@@ -1,18 +1,18 @@
 <ASSEMBLER_INFO>
  <VERSION>2.2.8</VERSION>
  <DEVICE>"ATmega328P"</DEVICE>
- <WORKING_DIR>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\Debug</WORKING_DIR>
+ <WORKING_DIR>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\Debug</WORKING_DIR>
  <INCLUDE_PATH>
   <DIR>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc</DIR>
   <DIR>C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avrassembler\Include</DIR>
   <DIR></DIR>
  </INCLUDE_PATH>
- <SOURCE_FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</SOURCE_FILE>
+ <SOURCE_FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</SOURCE_FILE>
  <INCLUDED_FILES>
   <FILE>C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc</FILE>
  </INCLUDED_FILES>
  <OBJECT_FILES>
-  <FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\Debug\projeto1.obj</FILE>
+  <FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\Debug\projeto1.obj</FILE>
  </OBJECT_FILES>
  <HEX_FILES>
   <FILE>projeto1.hex</FILE>
@@ -22,17 +22,21 @@
   <FILE>projeto1.lss</FILE>
  </OUTPUT_FILES>
  <LABELS>
-  <reset><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>22</LINE></reset>
-  <OCI1A_Interrupt><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>181</LINE></OCI1A_Interrupt>
-  <main><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>66</LINE></main>
-  <state_one><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>107</LINE></state_one>
-  <state_two><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>115</LINE></state_two>
-  <state_three><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>126</LINE></state_three>
-  <state_four><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>134</LINE></state_four>
-  <state_five><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>142</LINE></state_five>
-  <state_six><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>154</LINE></state_six>
-  <state_seven><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>166</LINE></state_seven>
-  <zero><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>174</LINE></zero>
-  <skip><FILE>C:\Users\ryanz\faculdade\micro\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>209</LINE></skip>
+  <reset><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>26</LINE></reset>
+  <OCI1A_Interrupt><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>240</LINE></OCI1A_Interrupt>
+  <main><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>93</LINE></main>
+  <delay_small><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>300</LINE></delay_small>
+  <state_one><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>136</LINE></state_one>
+  <state_two><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>151</LINE></state_two>
+  <state_three><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>169</LINE></state_three>
+  <state_four><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>183</LINE></state_four>
+  <state_five><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>194</LINE></state_five>
+  <state_six><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>208</LINE></state_six>
+  <state_seven><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>222</LINE></state_seven>
+  <clear><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>233</LINE></clear>
+  <uart_transmit><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>291</LINE></uart_transmit>
+  <skip><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>268</LINE></skip>
+  <outer_loop><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>302</LINE></outer_loop>
+  <inner_loop><FILE>C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm</FILE><LINE>304</LINE></inner_loop>
  </LABELS>
 </ASSEMBLER_INFO>
