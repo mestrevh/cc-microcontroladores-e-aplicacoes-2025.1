@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Tue Sep 23 17:33:39 2025
+AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Sat Sep 27 17:19:18 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -700,27 +700,53 @@ DEF  count_u      r17
 DEF  count_d      r18
 DEF  state        r19
 DEF  timer        r20
+DEF  byte_tx      r21
+DEF  state_sent   r22
 EQU  display1     00000010
 EQU  display2     00000020
 CSEG reset        00000018
-CSEG OCI1A_Interrupt 0000008e
+CSEG OCI1A_Interrupt 000000cf
 EQU  PRESCALE     00000005
 EQU  PRESCALE_DIV 00000400
 EQU  WGM          00000004
 EQU  TOP          00003d09
 EQU  baud         00002580
 EQU  ubrr_value   00000067
-CSEG main         0000003c
-CSEG delay_small  000000a5
-CSEG state_one    00000055
-CSEG state_two    0000005d
-CSEG state_three  00000067
-CSEG state_four   0000006f
-CSEG state_five   00000075
-CSEG state_six    0000007d
-CSEG state_seven  00000085
-CSEG clear        0000008b
-CSEG uart_transmit 0000009e
-CSEG skip         0000009a
-CSEG outer_loop   000000a6
-CSEG inner_loop   000000a7
+CSEG main         00000040
+CSEG delay_small  000001e1
+CSEG not_state_one 0000004c
+CSEG state_one    0000006a
+CSEG not_state_two 00000050
+CSEG state_two    00000077
+CSEG not_state_three 00000054
+CSEG state_three  00000086
+CSEG not_state_four 00000058
+CSEG state_four   00000093
+CSEG not_state_five 0000005c
+CSEG state_five   000000a0
+CSEG not_state_six 00000060
+CSEG state_six    000000af
+CSEG not_state_seven 00000064
+CSEG state_seven  000000be
+CSEG not_clear    00000068
+CSEG clear        000000cb
+CSEG skip_uart_one 00000075
+CSEG state_one_msg 000000e0
+CSEG uart_send_string 000001d2
+CSEG skip_uart_two 00000084
+CSEG state_two_msg 00000104
+CSEG skip_uart_three 00000091
+CSEG state_three_msg 00000125
+CSEG skip_uart_four 0000009e
+CSEG state_four_msg 00000147
+CSEG skip_uart_five 000000ad
+CSEG state_five_msg 00000168
+CSEG skip_uart_six 000000bc
+CSEG state_six_msg 0000018b
+CSEG skip_uart_seven 000000c9
+CSEG state_seven_msg 000001ae
+CSEG skip         000000dc
+CSEG uart_send_string_end 000001d8
+CSEG uart_transmit 000001d9
+CSEG outer_loop   000001e2
+CSEG inner_loop   000001e3
