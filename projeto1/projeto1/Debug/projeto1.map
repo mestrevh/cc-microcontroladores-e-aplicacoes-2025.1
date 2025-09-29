@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Mon Sep 29 00:02:58 2025
+AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Mon Sep 29 11:01:17 2025
 
 
 EQU  SIGNATURE_000 0000001e
@@ -713,7 +713,7 @@ EQU  TOP          00003d09
 EQU  baud         00002580
 EQU  ubrr_value   00000067
 CSEG main         00000046
-CSEG delay_small  000001e7
+CSEG delay_small  000001e6
 CSEG not_state_one 00000052
 CSEG state_one    00000070
 CSEG not_state_two 00000056
@@ -731,22 +731,22 @@ CSEG state_seven  000000c4
 CSEG not_clear    0000006e
 CSEG clear        000000d1
 CSEG skip_usart_one 0000007b
-CSEG state_one_msg 000000e6
-CSEG usart_send_string 000001d8
+CSEG state_one_msg 000000e5
+CSEG usart_send_string 000001d7
 CSEG skip_usart_two 0000008a
-CSEG state_two_msg 0000010a
+CSEG state_two_msg 00000109
 CSEG skip_usart_three 00000097
-CSEG state_three_msg 0000012b
+CSEG state_three_msg 0000012a
 CSEG skip_usart_four 000000a4
-CSEG state_four_msg 0000014d
+CSEG state_four_msg 0000014c
 CSEG skip_usart_five 000000b3
-CSEG state_five_msg 0000016e
+CSEG state_five_msg 0000016d
 CSEG skip_usart_six 000000c2
-CSEG state_six_msg 00000191
+CSEG state_six_msg 00000190
 CSEG skip_usart_seven 000000cf
-CSEG state_seven_msg 000001b4
-CSEG skip         000000e2
-CSEG usart_send_string_end 000001de
-CSEG usart_transmit 000001df
-CSEG outer_loop   000001e8
-CSEG inner_loop   000001e9
+CSEG state_seven_msg 000001b3
+CSEG skip         000000e1
+CSEG usart_send_string_end 000001dd
+CSEG usart_transmit 000001de
+CSEG outer_loop   000001e7
+CSEG inner_loop   000001e8

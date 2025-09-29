@@ -90,7 +90,7 @@ reset:
 ;      Configurações da USART (9600, 8N1)  	       ;
 ; *********************************************** ;
 	.equ baud = 9600
-	.equ ubrr_value = int((CLOCK / (16 * baud)) - 1)
+	.equ ubrr_value = int((CLOCK / (16 * baud)) - 1) ; = aproximadamente 103
 
 	ldi temp, high(ubrr_value)
 	sts UBRR0H, temp
