@@ -1,5 +1,5 @@
 
-AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Mon Sep 29 11:01:17 2025
+AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm Mon Sep 29 15:16:06 2025
 
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
 [builtin](2): Including file 'C:/Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\avrasm\inc\m328Pdef.inc'
@@ -1075,7 +1075,7 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
                                  ;      Configurações da USART (9600, 8N1)  	       ;
                                  ; *********************************************** ;
                                  	.equ baud = 9600
-                                 	.equ ubrr_value = int((CLOCK / (16 * baud)) - 1)
+                                 	.equ ubrr_value = int((CLOCK / (16 * baud)) - 1) ; = aproximadamente 103
                                  
 000031 e000                      	ldi temp, high(ubrr_value)
 000032 9300 00c5                 	sts UBRR0H, temp
@@ -1114,13 +1114,13 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 000046 2f02                      	mov temp, count_d ;
 000047 6100                      	ori temp, display1; ; Une a informação das unidades e o display a ser ativado em um mesmo registrador 0b00100000 - display 1
 000048 b908                      	out PORTC, temp
-000049 d19c                      	rcall delay_small ; Pequeno delay para conseguir visualizar os dois displays
+000049 d19d                      	rcall delay_small ; Pequeno delay para conseguir visualizar os dois displays
                                  
                                  	; Envia o valor das unidades no display 2 (Lógica semelhante as dezenas)
 00004a 2f01                      	mov temp, count_u
 00004b 6200                      	ori temp, display2;
 00004c b908                      	out PORTC, temp
-00004d d198                      	rcall delay_small
+00004d d199                      	rcall delay_small
                                  
                                  	; Verifica o estado atual do semáforo e realiza as ações correspondentes
 00004e 3040                      	cpi timer, 0b00000000 ; 0
@@ -1179,8 +1179,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 000076 f421                      		brne skip_usart_one	; Se sim, pula
                                  
 000077 e0f1                      		ldi ZH, high(state_one_msg << 1)
-000078 ecea                      		ldi ZL, low(state_one_msg << 1)
-000079 d15d                      		rcall usart_send_string ; Chama a rotina de transmissão serial
+000078 ecec                      		ldi ZL, low(state_one_msg << 1)
+000079 d15e                      		rcall usart_send_string ; Chama a rotina de transmissão serial
                                  
 00007a e061                      		ldi state_sent, 1 ; Marca como enviado
                                  
@@ -1203,8 +1203,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 000085 f421                      		brne skip_usart_two 
                                  
 000086 e0f2                      		ldi ZH, high(state_two_msg << 1)
-000087 e1e2                      		ldi ZL, low(state_two_msg << 1)
-000088 d14e                      		rcall usart_send_string
+000087 e1e4                      		ldi ZL, low(state_two_msg << 1)
+000088 d14f                      		rcall usart_send_string
                                  
 000089 e061                      		ldi state_sent, 1    
                                  
@@ -1226,8 +1226,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 000092 f421                      		brne skip_usart_three
                                  
 000093 e0f2                      		ldi ZH, high(state_three_msg << 1)
-000094 e5e4                      		ldi ZL, low(state_three_msg << 1)
-000095 d141                      		rcall usart_send_string
+000094 e5e6                      		ldi ZL, low(state_three_msg << 1)
+000095 d142                      		rcall usart_send_string
                                  
 000096 e061                      		ldi state_sent, 1  
                                  
@@ -1249,8 +1249,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 00009f f421                      		brne skip_usart_four 
                                  
 0000a0 e0f2                      		ldi ZH, high(state_four_msg << 1)
-0000a1 e9e8                      		ldi ZL, low(state_four_msg << 1)
-0000a2 d134                      		rcall usart_send_string
+0000a1 e9ea                      		ldi ZL, low(state_four_msg << 1)
+0000a2 d135                      		rcall usart_send_string
                                  
 0000a3 e061                      		ldi state_sent, 1     ; marca como enviado
                                  
@@ -1275,8 +1275,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 0000ae f421                      		brne skip_usart_five
                                  
 0000af e0f2                      		ldi ZH, high(state_five_msg << 1)
-0000b0 edea                      		ldi ZL, low(state_five_msg << 1)
-0000b1 d125                      		rcall usart_send_string
+0000b0 edec                      		ldi ZL, low(state_five_msg << 1)
+0000b1 d126                      		rcall usart_send_string
                                  
 0000b2 e061                      		ldi state_sent, 1    
                                  		skip_usart_five:
@@ -1300,8 +1300,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 0000bd f421                      		brne skip_usart_six
                                  
 0000be e0f3                      		ldi ZH, high(state_six_msg << 1)
-0000bf e2e0                      		ldi ZL, low(state_six_msg << 1)
-0000c0 d116                      		rcall usart_send_string
+0000bf e2e2                      		ldi ZL, low(state_six_msg << 1)
+0000c0 d117                      		rcall usart_send_string
                                  
 0000c1 e061                      		ldi state_sent, 1
                                  		
@@ -1323,8 +1323,8 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
 0000ca f421                      		brne skip_usart_seven
                                  
 0000cb e0f3                      		ldi ZH, high(state_seven_msg << 1)
-0000cc e6e6                      		ldi ZL, low(state_seven_msg << 1)
-0000cd d109                      		rcall usart_send_string
+0000cc e6e8                      		ldi ZL, low(state_seven_msg << 1)
+0000cd d10a                      		rcall usart_send_string
                                  
 0000ce e061                      		ldi state_sent, 1
                                  
@@ -1349,312 +1349,313 @@ AVRASM ver. 2.2.8  C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-ap
                                  
                                  	; Conta cada segundo para o estado
 0000d8 9543                      	inc timer
+0000d9 2766                      	clr state_sent
                                  
                                  	; Contar unidade
-0000d9 951a                      	dec count_u
+0000da 951a                      	dec count_u
                                  
                                  	; Comparar quando contador de unidades chega em '10'
-0000da 3f1f                      	cpi count_u, 0xff
-0000db f429                      	brne skip ; Se não, não zerar
+0000db 3f1f                      	cpi count_u, 0xff
+0000dc f429                      	brne skip ; Se não, não zerar
                                  
                                  	; Se sim, zerar unidades
-0000dc e019                      	ldi count_u, 0x09
+0000dd e019                      	ldi count_u, 0x09
                                  
                                  	; Contar dezenas
-0000dd 952a                      	dec count_d
+0000de 952a                      	dec count_d
                                  
                                  	; Comparar quando a unidade chegar em '10'
-0000de 3f2f                      	cpi count_d, 0xff
-0000df f409                      	brne skip
+0000df 3f2f                      	cpi count_d, 0xff
+0000e0 f409                      	brne skip
                                  
                                  	;zerar dezenas
-0000e0 e020                      	ldi count_d, 0x00
+0000e1 e020                      	ldi count_d, 0x00
                                  
                                  	skip:
-0000e1 910f                      		pop temp
-0000e2 bf0f                      		out SREG, temp
-0000e3 910f                      		pop temp
-0000e4 9518                      		reti
+0000e2 910f                      		pop temp
+0000e3 bf0f                      		out SREG, temp
+0000e4 910f                      		pop temp
+0000e5 9518                      		reti
                                  
                                  
                                  ; MENSAGENS
                                  
-0000e5 7345
-0000e6 6174
-0000e7 6f64
-0000e8 3120
-0000e9 203a
-0000ea 3153
-0000eb 2d20
-0000ec 5620
-0000ed 7265
-0000ee 656d
-0000ef 686c
-0000f0 3b6f
-0000f1 5320
-0000f2 2032
-0000f3 202d
-0000f4 6556
-0000f5 6d72
-0000f6 6c65
-0000f7 6f68
-0000f8 203b
-0000f9 3353
-0000fa 2d20
-0000fb 5620
-0000fc 7265
-0000fd 656d
-0000fe 686c
-0000ff 3b6f
-000100 5320
-000101 2034
-000102 202d
-000103 6556
-000104 6d72
-000105 6c65
-000106 6f68
-000107 0d2e
-000108 000a                      state_one_msg: .db "Estado 1: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Vermelho.", 0x0D, 0x0A, 0
-000109 7345
-00010a 6174
-00010b 6f64
-00010c 3220
-00010d 203a
-00010e 3153
-00010f 2d20
-000110 5620
-000111 7265
-000112 656d
-000113 686c
-000114 3b6f
-000115 5320
-000116 2032
-000117 202d
-000118 6556
-000119 6472
-00011a 3b65
-00011b 5320
-00011c 2033
-00011d 202d
-00011e 6556
-00011f 6472
-000120 3b65
-000121 5320
-000122 2034
-000123 202d
-000124 6556
-000125 6d72
-000126 6c65
-000127 6f68
-000128 0d2e
-000129 000a                      state_two_msg: .db "Estado 2: S1 - Vermelho; S2 - Verde; S3 - Verde; S4 - Vermelho.", 0x0D, 0x0A, 0
-00012a 7345
-00012b 6174
-00012c 6f64
-00012d 3320
-00012e 203a
-00012f 3153
-000130 2d20
-000131 5620
-000132 7265
-000133 656d
-000134 686c
-000135 3b6f
-000136 5320
-000137 2032
-000138 202d
-000139 6d41
-00013a 7261
-00013b 6c65
-00013c 3b6f
-00013d 5320
-00013e 2033
-00013f 202d
-000140 6556
-000141 6472
-000142 3b65
-000143 5320
-000144 2034
-000145 202d
-000146 6556
-000147 6d72
-000148 6c65
-000149 6f68
-00014a 0d2e
-00014b 000a                      state_three_msg: .db "Estado 3: S1 - Vermelho; S2 - Amarelo; S3 - Verde; S4 - Vermelho.", 0x0D, 0x0A, 0
-00014c 7345
-00014d 6174
-00014e 6f64
-00014f 3420
-000150 203a
-000151 3153
-000152 2d20
-000153 5620
-000154 7265
-000155 6564
-000156 203b
-000157 3253
-000158 2d20
-000159 5620
-00015a 7265
-00015b 656d
-00015c 686c
-00015d 3b6f
-00015e 5320
-00015f 2033
-000160 202d
-000161 6556
-000162 6472
-000163 3b65
-000164 5320
-000165 2034
-000166 202d
-000167 6556
-000168 6d72
-000169 6c65
-00016a 6f68
-00016b 0d2e
-00016c 000a                      state_four_msg: .db "Estado 4: S1 - Verde; S2 - Vermelho; S3 - Verde; S4 - Vermelho.", 0x0D, 0x0A, 0
-00016d 7345
-00016e 6174
-00016f 6f64
-000170 3520
-000171 203a
-000172 3153
-000173 2d20
-000174 4120
-000175 616d
-000176 6572
-000177 6f6c
-000178 203b
-000179 3253
-00017a 2d20
-00017b 5620
-00017c 7265
-00017d 656d
-00017e 686c
-00017f 3b6f
-000180 5320
-000181 2033
-000182 202d
-000183 6d41
-000184 7261
-000185 6c65
-000186 3b6f
-000187 5320
-000188 2034
-000189 202d
-00018a 6556
-00018b 6d72
-00018c 6c65
-00018d 6f68
-00018e 0d2e
-00018f 000a                      state_five_msg: .db "Estado 5: S1 - Amarelo; S2 - Vermelho; S3 - Amarelo; S4 - Vermelho.", 0x0D, 0x0A, 0
-000190 7345
-000191 6174
-000192 6f64
-000193 3620
-000194 203a
-000195 3153
-000196 2d20
-000197 5620
-000198 7265
-000199 656d
-00019a 686c
-00019b 3b6f
-00019c 5320
-00019d 2032
-00019e 202d
-00019f 6556
-0001a0 6d72
-0001a1 6c65
-0001a2 6f68
-0001a3 203b
-0001a4 3353
-0001a5 2d20
-0001a6 5620
-0001a7 7265
-0001a8 656d
-0001a9 686c
-0001aa 3b6f
-0001ab 5320
-0001ac 2034
-0001ad 202d
-0001ae 6556
-0001af 6472
-0001b0 2e65
-0001b1 0a0d
-C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm(402): warning: .cseg .db misalignment - padding zero byte
-0001b2 0000                      state_six_msg: .db "Estado 6: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Verde.", 0x0D, 0x0A, 0
-0001b3 7345
-0001b4 6174
-0001b5 6f64
-0001b6 3720
-0001b7 203a
-0001b8 3153
-0001b9 2d20
-0001ba 5620
-0001bb 7265
-0001bc 656d
-0001bd 686c
-0001be 3b6f
-0001bf 5320
-0001c0 2032
-0001c1 202d
-0001c2 6556
-0001c3 6d72
-0001c4 6c65
-0001c5 6f68
-0001c6 203b
-0001c7 3353
-0001c8 2d20
-0001c9 5620
-0001ca 7265
-0001cb 656d
-0001cc 686c
-0001cd 3b6f
-0001ce 5320
-0001cf 2034
-0001d0 202d
-0001d1 6d41
-0001d2 7261
-0001d3 6c65
-0001d4 2e6f
-0001d5 0a0d
+0000e6 7345
+0000e7 6174
+0000e8 6f64
+0000e9 3120
+0000ea 203a
+0000eb 3153
+0000ec 2d20
+0000ed 5620
+0000ee 7265
+0000ef 656d
+0000f0 686c
+0000f1 3b6f
+0000f2 5320
+0000f3 2032
+0000f4 202d
+0000f5 6556
+0000f6 6d72
+0000f7 6c65
+0000f8 6f68
+0000f9 203b
+0000fa 3353
+0000fb 2d20
+0000fc 5620
+0000fd 7265
+0000fe 656d
+0000ff 686c
+000100 3b6f
+000101 5320
+000102 2034
+000103 202d
+000104 6556
+000105 6d72
+000106 6c65
+000107 6f68
+000108 0d2e
+000109 000a                      state_one_msg: .db "Estado 1: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Vermelho.", 0x0D, 0x0A, 0
+00010a 7345
+00010b 6174
+00010c 6f64
+00010d 3220
+00010e 203a
+00010f 3153
+000110 2d20
+000111 5620
+000112 7265
+000113 656d
+000114 686c
+000115 3b6f
+000116 5320
+000117 2032
+000118 202d
+000119 6556
+00011a 6472
+00011b 3b65
+00011c 5320
+00011d 2033
+00011e 202d
+00011f 6556
+000120 6472
+000121 3b65
+000122 5320
+000123 2034
+000124 202d
+000125 6556
+000126 6d72
+000127 6c65
+000128 6f68
+000129 0d2e
+00012a 000a                      state_two_msg: .db "Estado 2: S1 - Vermelho; S2 - Verde; S3 - Verde; S4 - Vermelho.", 0x0D, 0x0A, 0
+00012b 7345
+00012c 6174
+00012d 6f64
+00012e 3320
+00012f 203a
+000130 3153
+000131 2d20
+000132 5620
+000133 7265
+000134 656d
+000135 686c
+000136 3b6f
+000137 5320
+000138 2032
+000139 202d
+00013a 6d41
+00013b 7261
+00013c 6c65
+00013d 3b6f
+00013e 5320
+00013f 2033
+000140 202d
+000141 6556
+000142 6472
+000143 3b65
+000144 5320
+000145 2034
+000146 202d
+000147 6556
+000148 6d72
+000149 6c65
+00014a 6f68
+00014b 0d2e
+00014c 000a                      state_three_msg: .db "Estado 3: S1 - Vermelho; S2 - Amarelo; S3 - Verde; S4 - Vermelho.", 0x0D, 0x0A, 0
+00014d 7345
+00014e 6174
+00014f 6f64
+000150 3420
+000151 203a
+000152 3153
+000153 2d20
+000154 5620
+000155 7265
+000156 6564
+000157 203b
+000158 3253
+000159 2d20
+00015a 5620
+00015b 7265
+00015c 656d
+00015d 686c
+00015e 3b6f
+00015f 5320
+000160 2033
+000161 202d
+000162 6556
+000163 6472
+000164 3b65
+000165 5320
+000166 2034
+000167 202d
+000168 6556
+000169 6d72
+00016a 6c65
+00016b 6f68
+00016c 0d2e
+00016d 000a                      state_four_msg: .db "Estado 4: S1 - Verde; S2 - Vermelho; S3 - Verde; S4 - Vermelho.", 0x0D, 0x0A, 0
+00016e 7345
+00016f 6174
+000170 6f64
+000171 3520
+000172 203a
+000173 3153
+000174 2d20
+000175 4120
+000176 616d
+000177 6572
+000178 6f6c
+000179 203b
+00017a 3253
+00017b 2d20
+00017c 5620
+00017d 7265
+00017e 656d
+00017f 686c
+000180 3b6f
+000181 5320
+000182 2033
+000183 202d
+000184 6d41
+000185 7261
+000186 6c65
+000187 3b6f
+000188 5320
+000189 2034
+00018a 202d
+00018b 6556
+00018c 6d72
+00018d 6c65
+00018e 6f68
+00018f 0d2e
+000190 000a                      state_five_msg: .db "Estado 5: S1 - Amarelo; S2 - Vermelho; S3 - Amarelo; S4 - Vermelho.", 0x0D, 0x0A, 0
+000191 7345
+000192 6174
+000193 6f64
+000194 3620
+000195 203a
+000196 3153
+000197 2d20
+000198 5620
+000199 7265
+00019a 656d
+00019b 686c
+00019c 3b6f
+00019d 5320
+00019e 2032
+00019f 202d
+0001a0 6556
+0001a1 6d72
+0001a2 6c65
+0001a3 6f68
+0001a4 203b
+0001a5 3353
+0001a6 2d20
+0001a7 5620
+0001a8 7265
+0001a9 656d
+0001aa 686c
+0001ab 3b6f
+0001ac 5320
+0001ad 2034
+0001ae 202d
+0001af 6556
+0001b0 6472
+0001b1 2e65
+0001b2 0a0d
 C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm(403): warning: .cseg .db misalignment - padding zero byte
-0001d6 0000                      state_seven_msg: .db "Estado 7: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Amarelo.", 0x0D, 0x0A, 0
+0001b3 0000                      state_six_msg: .db "Estado 6: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Verde.", 0x0D, 0x0A, 0
+0001b4 7345
+0001b5 6174
+0001b6 6f64
+0001b7 3720
+0001b8 203a
+0001b9 3153
+0001ba 2d20
+0001bb 5620
+0001bc 7265
+0001bd 656d
+0001be 686c
+0001bf 3b6f
+0001c0 5320
+0001c1 2032
+0001c2 202d
+0001c3 6556
+0001c4 6d72
+0001c5 6c65
+0001c6 6f68
+0001c7 203b
+0001c8 3353
+0001c9 2d20
+0001ca 5620
+0001cb 7265
+0001cc 656d
+0001cd 686c
+0001ce 3b6f
+0001cf 5320
+0001d0 2034
+0001d1 202d
+0001d2 6d41
+0001d3 7261
+0001d4 6c65
+0001d5 2e6f
+0001d6 0a0d
+C:\Users\Victo\Desktop\Ufal\2025.1\cc-microcontroladores-e-aplicacoes-2025.1\projeto1\projeto1\main.asm(404): warning: .cseg .db misalignment - padding zero byte
+0001d7 0000                      state_seven_msg: .db "Estado 7: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Amarelo.", 0x0D, 0x0A, 0
                                  
                                  ; --- ROTINAS DE TRANSMISS�O USART ---
                                  ; usart_send_string: Envia uma string localizada na mem�ria de programa
                                  ; Entrada: Ponteiro Z (r31:r30) aponta para o in�cio da string
                                  usart_send_string:
-0001d7 9155                          lpm byte_tx, Z+     ; Carrega byte da mem�ria de programa e incrementa Z
-0001d8 3050                          cpi byte_tx, 0      ; Compara com o terminador nulo
-0001d9 f019                          breq usart_send_string_end ; Se for nulo, termina
-0001da d003                          rcall usart_transmit ; Envia o byte
-0001db 940c 01d7                     jmp usart_send_string
+0001d8 9155                          lpm byte_tx, Z+     ; Carrega byte da mem�ria de programa e incrementa Z
+0001d9 3050                          cpi byte_tx, 0      ; Compara com o terminador nulo
+0001da f019                          breq usart_send_string_end ; Se for nulo, termina
+0001db d003                          rcall usart_transmit ; Envia o byte
+0001dc 940c 01d8                     jmp usart_send_string
                                  usart_send_string_end:
-0001dd 9508                          ret
+0001de 9508                          ret
                                  
                                  ; usart_transmit: Envia um �nico byte
                                  ; Entrada: byte_tx (r21) cont�m o caractere para enviar
                                  usart_transmit:
-0001de 9100 00c0                     lds temp, UCSR0A
-0001e0 ff05                          sbrs temp, UDRE0
-0001e1 940c 01de                     jmp usart_transmit
-0001e3 9350 00c6                     sts UDR0, byte_tx
-0001e5 9508                          ret
+0001df 9100 00c0                     lds temp, UCSR0A
+0001e1 ff05                          sbrs temp, UDRE0
+0001e2 940c 01df                     jmp usart_transmit
+0001e4 9350 00c6                     sts UDR0, byte_tx
+0001e6 9508                          ret
                                  
                                  ; Delay de 20 * 250 = 5000 ciclos 
                                  delay_small:
-0001e6 e184                          ldi r24, 20        ; contador externo
+0001e7 e184                          ldi r24, 20        ; contador externo
                                  outer_loop:
-0001e7 ef9a                          ldi r25, 250       ; contador interno
+0001e8 ef9a                          ldi r25, 250       ; contador interno
                                  inner_loop:
-0001e8 959a                          dec r25            ; decrementa o contador interno
-0001e9 f7f1                          brne inner_loop    ; repete at? zerar
-0001ea 958a                          dec r24            ; quando termina o interno, decrementa o externo
-0001eb f7d9                          brne outer_loop
+0001e9 959a                          dec r25            ; decrementa o contador interno
+0001ea f7f1                          brne inner_loop    ; repete at? zerar
+0001eb 958a                          dec r24            ; quando termina o interno, decrementa o externo
+0001ec f7d9                          brne outer_loop
 
 
 RESOURCE USE INFORMATION
@@ -1675,7 +1676,7 @@ counted separately from r26..r31 here.
 x  :   0 y  :   0 z  :   1 r0 :   0 r1 :   0 r2 :   0 r3 :   0 r4 :   0 
 r5 :   0 r6 :   0 r7 :   0 r8 :   0 r9 :   0 r10:   0 r11:   0 r12:   0 
 r13:   0 r14:   0 r15:   0 r16:  74 r17:   8 r18:   8 r19:   9 r20:  11 
-r21:   3 r22:  14 r23:   0 r24:   2 r25:   2 r26:   0 r27:   0 r28:   0 
+r21:   3 r22:  15 r23:   0 r24:   2 r25:   2 r26:   0 r27:   0 r28:   0 
 r29:   0 r30:   7 r31:   7 
 Registers used: 12 out of 35 (34.3%)
 
@@ -1686,7 +1687,7 @@ brcc  :   0 brcs  :   0 break :   0 breq  :   1 brge  :   0 brhc  :   0
 brhs  :   0 brid  :   0 brie  :   0 brlo  :   0 brlt  :   0 brmi  :   0 
 brne  :  19 brpl  :   0 brsh  :   0 brtc  :   0 brts  :   0 brvc  :   0 
 brvs  :   0 bset  :   0 bst   :   0 call  :   0 cbi   :   0 cbr   :   0 
-clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   0 cls   :   0 
+clc   :   0 clh   :   0 cli   :   0 cln   :   0 clr   :   1 cls   :   0 
 clt   :   0 clv   :   0 clz   :   0 com   :   0 cp    :   0 cpc   :   0 
 cpi   :  11 cpse  :   0 dec   :   4 eor   :   0 fmul  :   0 fmuls :   0 
 fmulsu:   0 icall :   0 ijmp  :   0 in    :   1 inc   :   8 jmp   :  21 
@@ -1699,12 +1700,12 @@ sbiw  :   0 sbr   :   0 sbrc  :   0 sbrs  :   1 sec   :   0 seh   :   0
 sei   :   1 sen   :   0 ser   :   0 ses   :   0 set   :   0 sev   :   0 
 sez   :   0 sleep :   0 spm   :   0 st    :   0 std   :   0 sts   :  10 
 sub   :   0 subi  :   0 swap  :   0 tst   :   7 wdr   :   0 
-Instructions used: 22 out of 113 (19.5%)
+Instructions used: 23 out of 113 (20.4%)
 
 "ATmega328P" memory use summary [bytes]:
 Segment   Begin    End      Code   Data   Used    Size   Use%
 ---------------------------------------------------------------
-[.cseg] 0x000000 0x0003da    462    484    946   32768   2.9%
+[.cseg] 0x000000 0x0003dc    464    484    948   32768   2.9%
 [.dseg] 0x000100 0x000100      0      0      0    2048   0.0%
 [.eseg] 0x000000 0x000000      0      0      0    1024   0.0%
 
