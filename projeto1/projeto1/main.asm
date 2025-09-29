@@ -111,8 +111,10 @@ reset:
 
 	sei
 	
+; *********************************************** ;
+;      Lógica de Controle dos Estados do Semáforo ;
+; *********************************************** ;
 main:
-	
 	; Envia o valor das dezenas no display 1
 	mov temp, count_d ;
 	ori temp, display1; ; Une a informação das unidades e o display a ser ativado em um mesmo registrador 0b00100000 - display 1
@@ -341,7 +343,9 @@ main:
 
 	jmp main
 
-
+; *********************************************** ;
+;     Rotina de Interrupção do Timer1 Compare A	  ;
+; *********************************************** ;
 OCI1A_Interrupt:
 	; Salva o estado dos registradores que serão utilizados na ISR
 	push temp
