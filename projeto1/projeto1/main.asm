@@ -1,67 +1,80 @@
-;
-; projeto1.asm
-;
-; Created: 16/09/2025 10:43:08
-; Author : VictorHugo
-;
+; *********************************************** ;
+; Projeto 1 - Semaforo com USART				  ;
+; Grupo: 										  ;									
+; - VICTOR HUGO SILVA ANGELO			 	 	  ;
+; - RYAN GOMES TORRES BARBALHO COSTA	 		  ;	
+; - RUAN TENORIO DE MELO				 		  ;
+; *********************************************** ;
 
-#define CLOCK 16.0e6 ; 16.0e6 s
+#define CLOCK 16.0e6 // 16.0e6 s
 #define DELAY 1 ; 1 micro-segundos
 
-.def temp = r16
-.def count_u = r17
-.def count_d = r18
-.def state = r19
+.def temp = r16 ; Registrador temporário
+.def count_u = r17 ; Registrador para contar as unidades
+.def count_d = r18 ; Registrador para contar as dezenas
+.def state = r19 ; Registrador para controlar o estado atuaç
 .def timer = r20
 .def byte_tx = r21
-.def state_sent = r22
-.equ display1 = 0b00010000 ;quinto bit settado
-.equ display2 = 0b00100000 ;sexto bit settado
+.def state_sent = r22 ; Flag para indicar se o estado já foi enviado pela USART
 
+; *********************************************** ;
+;       Constantes de Ativação dos Displays		  ;										 		  ;
+; *********************************************** ;
+.equ display1 = 0b00010000 ; Quinto bit enviado na porta C irá ativar o display 1 através do transistor;
+.equ display2 = 0b00100000 ; Sexto bit enviado na porta C irá ativar o display 2 através do transistor;
+
+; *********************************************** ;
+;    Configurações dos endereços de interrupção	   ;
+; *********************************************** ;
 .cseg
-
-.org 0x0000
+.org 0x0000 ; Vetor de reset
 jmp reset
-.org OC1Aaddr
+
+.org OC1Aaddr ; Vetor de interrupção do Timer1 Compare A
 jmp OCI1A_Interrupt
 
 reset:
-	
-	; Inicializa Stack Pointer
+	; Inicialização do Stack Pointer
     ldi temp, high(RAMEND)
     out SPH, temp
     ldi temp, low(RAMEND)
     out SPL, temp
+	
+; *********************************************** ;
+;            Configurações do Timer1			   ;
+; *********************************************** ;
 
-	;CONFIGURA��O DO TIMER
+	.equ PRESCALE = 0b101 ; Configuração do Clock Selector para 1024
+	.equ PRESCALE_DIV = 1024 ; Valor utilizado do preescale
 	
-	.equ PRESCALE = 0b101 ; verifique no datasheet ou slide
-	.equ PRESCALE_DIV = 1024; verifique no datasheet ou slide
-	
-	.equ WGM = 0b0100 ; configura??o do ctc
-	.equ TOP = int(0.5 + ((CLOCK/PRESCALE_DIV)*DELAY)) ; de 0 at? 65535
-	.if TOP > 65535
+	.equ WGM = 0b0100 ; Configuração do Waveform Generation Mode para CTC (Clear Timer on Compare Match)
+	.equ TOP = int(0.5 + ((CLOCK/PRESCALE_DIV)*DELAY))
+	.if TOP > 65535 ; Garante que o valor de TOP está dentro do intervalo válido para 16 bits
 	.error "TOP is out for range"
 	.endif
 
-	;configura??o do TOP
+	; Carregamento do TOP
 	ldi temp, high(TOP)
 	sts OCR1AH, temp
 	ldi temp, low(TOP)
 	sts OCR1AL, temp
 
-	;configura??o do CS
+	; Configuração dos bits 1 e 0 do WGM no TCCR1A (Lembrando que os bits 2 e 3 estão em outro registrador)
 	ldi temp, ((WGM&0b11) << WGM10)
 	sts TCCR1A, temp
 
-	;iniciar a contagem
+	; Configuração do WGM2 no TCCR1B e do prescaler
 	ldi temp, ((WGM >> 2) << WGM12) | (PRESCALE << CS10)
 	sts TCCR1B, temp
 
+	; Habilita a interrupção de Compare Match A do Timer1 para controlar a transição dos estados do semáforo
 	ldi temp, (1<<OCIE1A)
 	sts TIMSK1, temp
 
-	; todos os pinos da PORTC como sa?da
+; *********************************************** ;
+;      Configurações das Portas Utilizadas   	   ;
+; *********************************************** ;
+; Configuração dos pinos como saída
 	ldi temp, (1 << PCINT8) | (1 << PCINT9) | (1 << PCINT10) | (1 << PCINT11) | (1 << PCINT12) | (1 << PCINT13)
 	out DDRC, temp
 
@@ -73,9 +86,9 @@ reset:
 	ldi temp, (1 << PCINT5) | (1 << PCINT4) | (1 << PCINT3) | (1 << PCINT2) | (1 << PCINT1) | (1 << PCINT0)
 	out DDRB, temp
 
-	; CONFIGURA��O DA USART
-	; Configura baud rate
-	
+; *********************************************** ;
+;      Configurações da USART (9600, 8N1)  	       ;
+; *********************************************** ;
 	.equ baud = 9600
 	.equ ubrr_value = int((CLOCK / (16 * baud)) - 1)
 
@@ -88,11 +101,11 @@ reset:
 	ldi temp, (1<<TXEN0)
 	sts UCSR0B, temp
 
-	; Modo ass�ncrono, 8 bits, 1 stop, sem paridade
+	; Modo assíncrono, 8 bits, 1 stop, sem paridade
 	ldi temp, (1<<UCSZ01) | (1<<UCSZ00)
 	sts UCSR0C, temp
 
-	;iniciar no estado e2
+	; Iniciar no estado e2
 	ldi timer, 10
 	ldi state, 2
 
@@ -100,70 +113,60 @@ reset:
 	
 main:
 	
-	;enviando os bits do led para dezenas
-	mov temp, count_d
-	ori temp, display1; 0b00100000 - display 1
+	; Envia o valor das dezenas no display 1
+	mov temp, count_d ;
+	ori temp, display1; ; Une a informação das unidades e o display a ser ativado em um mesmo registrador 0b00100000 - display 1
 	out PORTC, temp
-	rcall delay_small
+	rcall delay_small ; Pequeno delay para conseguir visualizar os dois displays
 
-	;enviando os bits do led para unidades
+	; Envia o valor das unidades no display 2 (Lógica semelhante as dezenas)
 	mov temp, count_u
-	ori temp, display2; 0b00010000 - display 2
+	ori temp, display2;
 	out PORTC, temp
 	rcall delay_small
 
-	;timer = registrador respons?vel pelo tempo em rela??o a troca dos estados
-	;mov timer, count_d
-	
+	; Verifica o estado atual do semáforo e realiza as ações correspondentes
 	cpi timer, 0b00000000 ; 0
 	brne not_state_one
 	jmp state_one
 
 	not_state_one:
-
-	cpi timer, 0b00001010 ; 10
-	brne not_state_two
-	jmp state_two
+		cpi timer, 0b00001010 ; 10
+		brne not_state_two
+		jmp state_two
 
 	not_state_two:
-
-	cpi timer, 0b00100000 ; 32
-	brne not_state_three
-	jmp state_three
+		cpi timer, 0b00100000 ; 32
+		brne not_state_three
+		jmp state_three
 
 	not_state_three:
-
-	cpi timer, 0b00100100 ; 36
-	brne not_state_four
-	jmp state_four
+		cpi timer, 0b00100100 ; 36
+		brne not_state_four
+		jmp state_four
 
 	not_state_four:
-
-	cpi timer, 0b01100001 ; 97
-	brne not_state_five
-	jmp state_five
+		cpi timer, 0b01100001 ; 97
+		brne not_state_five
+		jmp state_five
 
 	not_state_five:
-
-	cpi timer, 0b01100101 ; 101
-	brne not_state_six
-	jmp state_six
+		cpi timer, 0b01100101 ; 101
+		brne not_state_six
+		jmp state_six
 
 	not_state_six:
-
-	cpi timer, 0b01111111 ; 127
-	brne not_state_seven
-	jmp state_seven
+		cpi timer, 0b01111111 ; 127
+		brne not_state_seven
+		jmp state_seven
 
 	not_state_seven:
-
-	cpi timer, 0b10000011 ; 131
-	brne not_clear
-	jmp clear
+		cpi timer, 0b10000011 ; 131
+		brne not_clear
+		jmp clear
 
 	not_clear:
-
-	jmp main
+		jmp main
 		
 	state_one:
 		ldi temp, 0b10010000
@@ -174,19 +177,17 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_one		; se sim, pula
+		; Transmite o estado pela USART
+		tst state_sent      ; Já enviou?
+		brne skip_usart_one	; Se sim, pula
 
 		ldi ZH, high(state_one_msg << 1)
 		ldi ZL, low(state_one_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string ; Chama a rotina de transmissão serial
 
-		ldi state_sent, 1 ; marca como enviado
+		ldi state_sent, 1 ; Marca como enviado
 
-		skip_uart_one:
-
-		jmp main
+		skip_usart_one: jmp main
 
 	state_two:
 		ldi temp, 0b00110000
@@ -200,17 +201,17 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_two   ; se sim, pula
+		; Transmite o estado pela USART
+		tst state_sent        
+		brne skip_usart_two 
 
 		ldi ZH, high(state_two_msg << 1)
 		ldi ZL, low(state_two_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string
 
-		ldi state_sent, 1     ; marca como enviado
+		ldi state_sent, 1    
 
-		skip_uart_two:
+		skip_usart_two:
 
 		jmp main
 
@@ -223,17 +224,17 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_three   ; se sim, pula
+		; Transmite o estado pela USART
+		tst state_sent      
+		brne skip_usart_three
 
 		ldi ZH, high(state_three_msg << 1)
 		ldi ZL, low(state_three_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string
 
-		ldi state_sent, 1     ; marca como enviado
+		ldi state_sent, 1  
 
-		skip_uart_three:
+		skip_usart_three:
 
 		jmp main
 
@@ -246,17 +247,17 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_four   ; se sim, pula
+		; Transmite o estado pela USART só 1x
+		tst state_sent   
+		brne skip_usart_four 
 
 		ldi ZH, high(state_four_msg << 1)
 		ldi ZL, low(state_four_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string
 
 		ldi state_sent, 1     ; marca como enviado
-		
-		skip_uart_four:
+
+		skip_usart_four:
 
 		jmp main
 
@@ -272,16 +273,16 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_five   ; se sim, pula
+		; Transmite o estado pela USART só 1x
+		tst state_sent       
+		brne skip_usart_five
 
 		ldi ZH, high(state_five_msg << 1)
 		ldi ZL, low(state_five_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string
 
-		ldi state_sent, 1     ; marca como enviado
-		skip_uart_five:
+		ldi state_sent, 1    
+		skip_usart_five:
 
 		jmp main
 
@@ -297,17 +298,17 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_six   ; se sim, pula
+		; Transmite o estado pela USART
+		tst state_sent    
+		brne skip_usart_six
 
 		ldi ZH, high(state_six_msg << 1)
 		ldi ZL, low(state_six_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string
 
-		ldi state_sent, 1     ; marca como enviado
+		ldi state_sent, 1
 		
-		skip_uart_six:
+		skip_usart_six:
 
 		jmp main
 
@@ -320,17 +321,17 @@ main:
 
 		inc state
 
-		; transmite o estado pela UART s� 1x
-		tst state_sent        ; j� enviou?
-		brne skip_uart_seven   ; se sim, pula
+		; Transmite o estado pela USART só 1x
+		tst state_sent 
+		brne skip_usart_seven
 
 		ldi ZH, high(state_seven_msg << 1)
 		ldi ZL, low(state_seven_msg << 1)
-		rcall uart_send_string
+		rcall usart_send_string
 
-		ldi state_sent, 1     ; marca como enviado
-		
-		skip_uart_seven:
+		ldi state_sent, 1
+
+		skip_usart_seven:
 
 		jmp main
 
@@ -342,28 +343,29 @@ main:
 
 
 OCI1A_Interrupt:
+	; Salva o estado dos registradores que serão utilizados na ISR
 	push temp
 	in temp, SREG
 	push temp
 
-	;conta cada segundo para o estado
+	; Conta cada segundo para o estado
 	inc timer
 	clr state_sent
 
-	;contar unidade
+	; Contar unidade
 	dec count_u
 
-	;comparar quando a unidade chegar em '10'
+	; Comparar quando contador de unidades chega em '10'
 	cpi count_u, 0xff
-	brne skip
+	brne skip ; Se não, não zerar
 
-	; zerar unidades
+	; Se sim, zerar unidades
 	ldi count_u, 0x09
 
-	;contar dezenas
+	; Contar dezenas
 	dec count_d
 
-	;comparar quando a unidade chegar em '10'
+	; Comparar quando a unidade chegar em '10'
 	cpi count_d, 0xff
 	brne skip
 
@@ -371,26 +373,10 @@ OCI1A_Interrupt:
 	ldi count_d, 0x00
 
 	skip:
-		
-		; colocar o valor de count_d em led
-		;mov led, count_d
-
-		; trocar os 4 primeiros bits
-		;swap led            
-		;andi led, 0xF0
-
-		; completanto o bits do reg. led
-		;or led, count_u
-		
-		;ldi s1, 0x01
-		;andi s1, count_u
-
-		;out PORTD, led
-
-	pop temp
-	out SREG, temp
-	pop temp
-	reti
+		pop temp
+		out SREG, temp
+		pop temp
+		reti
 
 
 ; MENSAGENS
@@ -403,29 +389,28 @@ state_five_msg: .db "Estado 5: S1 - Amarelo; S2 - Vermelho; S3 - Amarelo; S4 - V
 state_six_msg: .db "Estado 6: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Verde.", 0x0D, 0x0A, 0
 state_seven_msg: .db "Estado 7: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 - Amarelo.", 0x0D, 0x0A, 0
 
-; --- ROTINAS DE TRANSMISS�O UART ---
-
-; uart_send_string: Envia uma string localizada na mem�ria de programa
-; Entrada: Ponteiro Z (r31:r30) aponta para o in�cio da string
-uart_send_string:
-    lpm byte_tx, Z+     ; Carrega byte da mem�ria de programa e incrementa Z
+; --- ROTINAS DE TRANSMISS�O USART ---
+; usart_send_string: Envia uma string localizada na mem�ria de programa
+; Entrada: Ponteiro Z (r31:r30) aponta para o in�cio da string
+usart_send_string:
+    lpm byte_tx, Z+     ; Carrega byte da mem�ria de programa e incrementa Z
     cpi byte_tx, 0      ; Compara com o terminador nulo
     breq uart_send_string_end ; Se for nulo, termina
     rcall uart_transmit ; Envia o byte
     jmp uart_send_string
-uart_send_string_end:
+usart_send_string_end:
     ret
 
-; uart_transmit: Envia um �nico byte
-; Entrada: byte_tx (r21) cont�m o caractere para enviar
-uart_transmit:
+; usart_transmit: Envia um �nico byte
+; Entrada: byte_tx (r21) cont�m o caractere para enviar
+usart_transmit:
     lds temp, UCSR0A
     sbrs temp, UDRE0
     jmp uart_transmit
     sts UDR0, byte_tx
     ret
 
-; 20 * 250 = 5000 ciclos
+; Delay de 20 * 250 = 5000 ciclos 
 delay_small:
     ldi r24, 20        ; contador externo
 outer_loop:
