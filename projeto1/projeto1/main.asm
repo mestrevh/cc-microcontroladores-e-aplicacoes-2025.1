@@ -105,9 +105,19 @@ reset:
 	ldi temp, (1<<UCSZ01) | (1<<UCSZ00)
 	sts UCSR0C, temp
 
-	; Iniciar no estado e2
-	ldi timer, 10
-	ldi state, 2
+	; Iniciar no estado 2
+    ldi timer, 10
+    ldi state, 2
+
+	; Iniciar contadores
+    ldi count_u, 7
+    ldi count_d, 8
+
+    ; Forçar LEDs e displays no estado 2
+    ldi temp, 0b00110000   ; PORTD = semáforo 3/4
+    out PORTD, temp
+    ldi temp, 0b00100001   ; PORTB = semáforo 1/2
+    out PORTB, temp
 
 	sei
 	
@@ -399,9 +409,9 @@ state_seven_msg: .db "Estado 7: S1 - Vermelho; S2 - Vermelho; S3 - Vermelho; S4 
 usart_send_string:
     lpm byte_tx, Z+     ; Carrega byte da mem�ria de programa e incrementa Z
     cpi byte_tx, 0      ; Compara com o terminador nulo
-    breq uart_send_string_end ; Se for nulo, termina
-    rcall uart_transmit ; Envia o byte
-    jmp uart_send_string
+    breq usart_send_string_end ; Se for nulo, termina
+    rcall usart_transmit ; Envia o byte
+    jmp usart_send_string
 usart_send_string_end:
     ret
 
@@ -410,7 +420,7 @@ usart_send_string_end:
 usart_transmit:
     lds temp, UCSR0A
     sbrs temp, UDRE0
-    jmp uart_transmit
+    jmp usart_transmit
     sts UDR0, byte_tx
     ret
 
